@@ -1,15 +1,14 @@
 const express = require('express');
 const FoodrecipesService = require('./foodrecipes-service');
-
 const foodrecipesRouter = express.Router();
 const jsonParser = express.json();
 const path = require('path');
 
-const foodrecipesForm = foodrecipes => ({
-  id: foodrecipes.id,
-  foodName: foodrecipes.foodName,
-  ingredients: foodrecipes.ingredients,
-  description: foodrecipes.description
+const foodrecipesForm = foodrecipe => ({
+  id: foodrecipe.id,
+  foodName: foodrecipe.foodName,
+  ingredients: foodrecipe.ingredients,
+  description: foodrecipe.description
 });
 
 foodrecipesRouter
@@ -18,8 +17,8 @@ foodrecipesRouter
     const knexInstance = req.app.get('db');
 
     FoodrecipesService.getAllRecipes(knexInstance)
-      .then(foodrecipes => {
-        res.json(foodrecipes.map(foodrecipesForm))
+      .then(recipes => {
+        res.json(recipes.map(foodrecipesForm))
       })
       .catch(next)
   })
@@ -37,7 +36,7 @@ foodrecipesRouter
     if(!ingredients) {
       return res.status(400).json({
         error: {
-          message: `Missing ingredients`
+          message: `Missing food ingredients`
         }
       })
     };
@@ -45,7 +44,7 @@ foodrecipesRouter
     if(!description) {
       return res.status(400).json({
         error: {
-          message: `Missing description`
+          message: `Missing food description`
         }
       })
     };
@@ -61,9 +60,48 @@ foodrecipesRouter
       req.app.get('db'),
       foodrecipe
     )
-      .then()
+      .then(foodrecipe => {
+        res
+          .status(201)
+          .location(path.possix.join(req.originalUrl + `/${foodrecipe.id}`))
+          .json(foodrecipesForm(foodrecipe))
+      })
+      .catch(next)
 
+  });
+
+foodrecipesRouter
+  .route('/:foodrecipes_id')
+  .all((req, res, next) => {
+    FoodrecipesService.getById(
+      req.app.get('db'),
+      req.params.foodrecipes_id
+    )
+    .then(foodrecipe => {
+      if(!foodrecipe) {
+        return res.status(404).json({
+          error: {
+            message: `Food Recipes doesn't exist`
+          }
+        })
+      }
+      res.json(foodrecipesForm(foodrecipe))
+    })
+    .catch(next)
   })
+  .get((req, res, next) => {
+    res.json(foodrecipesForm(res.foodrecipe))
+  })
+  .delete((req, res) => {
+    FoodrecipesService.deleteRecipes(
+      req.app.get('db'),
+      req.params.foodrecipes_id
+    )
+    .then(recipes => {
+      res.status(204).end()
+    })
+    .catch(next)
+  })
+  //.patch
 
 
-  

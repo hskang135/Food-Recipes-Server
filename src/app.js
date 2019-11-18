@@ -6,6 +6,7 @@ const helmet = require('helmet');
 
 const { NODE_ENV } = require('./config');
 const app = express();
+const foodrecipesRouter = require('./foodrecipes-router');
 
 const morganOption = (NODE_ENV === 'production')
   ? 'tiny'
@@ -14,15 +15,11 @@ const morganOption = (NODE_ENV === 'production')
 app.use(morgan(morganOption))
 app.use(helmet())
 app.use(cors())
+app.use(express.json());
+app.use('/api/foodrecipes', foodrecipesRouter);
 
 app.get('/', (req, res) => {
   res.send('Hello, boilerplate!')
-})
-
-//app.use('/api/foodrecipes')
-
-app.get('./foodrecipes', (req, res, next) => {
-  res.send('Hello, World!')
 });
 
 app.use(function errorHandler(error, req, res, next) {
