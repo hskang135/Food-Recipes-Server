@@ -19,6 +19,12 @@ app.get('/', (req, res) => {
   res.send('Hello, boilerplate!')
 })
 
+//app.use('/api/foodrecipes')
+
+app.get('./foodrecipes', (req, res, next) => {
+  res.send('Hello, World!')
+});
+
 app.use(function errorHandler(error, req, res, next) {
   let response
   if (NODE_ENV === 'production') {
@@ -28,6 +34,8 @@ app.use(function errorHandler(error, req, res, next) {
     response = { message: error.message, error }
   }
   res.status(500).json(response)
-})
+});
 
 module.exports = app;
+
+

@@ -1,15 +1,19 @@
 {
-  "name": "express-boilerplate",
+  "name": "food-recipes-server",
   "version": "1.0.0",
   "description": "This is a boilerplate project used for starting new projects!",
-  "main": "index.js",
+  "main": "src/server.js",
   "directories": {
     "test": "test"
   },
   "scripts": {
     "test": "mocha --require test/setup.js",
     "start": "node src/server.js",
-    "dev": "nodemon src/server.js"
+    "dev": "nodemon src/server.js",
+    "migrate": "postgrator --config postgrator-config.js",
+    "migrate:test": "env NODE_ENV=test npm run migrate",
+    "predeploy": "npm audit",
+    "deploy": "git push heroku master"
   },
   "repository": {
     "type": "git",
@@ -32,6 +36,11 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "helmet": "^3.21.2",
-    "morgan": "^1.9.1"
+    "morgan": "^1.9.1",
+    "migrate": "^1.6.2",
+    "xss": "^1.0.3",
+    "knex": "^0.16.3",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^8.5.1"
   }
 }
