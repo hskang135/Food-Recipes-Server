@@ -1,12 +1,14 @@
 const FoodrecipesService = {
   getAllRecipes(knex) {
-    return knex.select('*').from('recipes')
+    return knex
+      .select('*')
+      .from('foodrecipes')
   },
 
-  insertRecipes(knex, newRecipes) {
+  insertRecipes(knex, newRecipe) {
     return knex
-      .insert(newRecipes)
-      .into('recipes')
+      .insert(newRecipe)
+      .into('foodrecipes')
       .returning('*')
       .then(rows => {
         return rows[0]
@@ -14,17 +16,21 @@ const FoodrecipesService = {
   },
 
   getById(knex, id) {
-    return knex.from('recipes').select('*').where('id', id).first()
+    return knex
+      .from('foodrecipes')
+      .select('*')
+      .where('id', id)
+      .first()
   },
 
   deleteRecipes(knex, id) {
-    return knex('recipes')
+    return knex('foodrecipes')
       .where({ id })
       .delete()
   },
 
   updateRecipes(knex, id, newRecipesFields) {
-    return knex('recipes')
+    return knex('foodrecipes')
       .where({ id })
       .update(newRecipesFields)
   }

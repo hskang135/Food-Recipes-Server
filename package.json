@@ -29,18 +29,20 @@
     "chai": "^4.2.0",
     "mocha": "^6.2.2",
     "nodemon": "^1.19.4",
+    "postgrator-cli": "^3.2.0",
     "supertest": "^4.0.2"
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "helmet": "^3.21.2",
-    "morgan": "^1.9.1",
-    "migrate": "^1.6.2",
-    "xss": "^1.0.3",
+    "jsonwebtoken": "^8.5.1",
     "knex": "^0.16.3",
-    "bcryptjs": "^2.4.3",
-    "jsonwebtoken": "^8.5.1"
+    "migrate": "^1.6.2",
+    "morgan": "^1.9.1",
+    "pg": "^7.12.1",
+    "xss": "^1.0.3"
   }
 }

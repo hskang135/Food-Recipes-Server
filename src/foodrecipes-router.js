@@ -4,11 +4,11 @@ const foodrecipesRouter = express.Router();
 const jsonParser = express.json();
 const path = require('path');
 
-const foodrecipesForm = foodrecipe => ({
-  id: foodrecipe.id,
-  foodName: foodrecipe.foodName,
-  ingredients: foodrecipe.ingredients,
-  description: foodrecipe.description
+const foodrecipeForm = foodrecipes => ({
+  id: foodrecipes.id,
+  foodname: foodrecipes.foodname,
+  ingredients: foodrecipes.ingredients,
+  description: foodrecipes.description
 });
 
 foodrecipesRouter
@@ -17,15 +17,15 @@ foodrecipesRouter
     const knexInstance = req.app.get('db');
 
     FoodrecipesService.getAllRecipes(knexInstance)
-      .then(recipes => {
-        res.json(recipes.map(foodrecipesForm))
+      .then(foodrecipes => {
+        res.json(foodrecipes.map(foodrecipeForm))
       })
       .catch(next)
   })
   .post(jsonParser, (req, res, next) => {
-    const {foodName, ingredients, description} = req.body;
+    const {foodname, ingredients, description} = req.body;
 
-    if(!foodName) {
+    if(!foodname) {
       return res.status(400).json({
         error: {
           message: `Missing food name`
@@ -49,59 +49,92 @@ foodrecipesRouter
       })
     };
 
-    const foodrecipe = {
+    const newRecipe = {
       id,
-      foodName,
+      foodname,
       ingredients,
       description
     };
 
     FoodrecipesService.insertRecipes(
       req.app.get('db'),
-      foodrecipe
+      newRecipe
     )
-      .then(foodrecipe => {
+      .then(foodrecipes => {
         res
           .status(201)
           .location(path.possix.join(req.originalUrl + `/${foodrecipe.id}`))
-          .json(foodrecipesForm(foodrecipe))
+          .json(foodrecipeForm(foodrecipes))
       })
       .catch(next)
-
   });
 
 foodrecipesRouter
   .route('/:foodrecipes_id')
   .all((req, res, next) => {
+    const {foodrecipes_id} = req.params;
+
     FoodrecipesService.getById(
       req.app.get('db'),
-      req.params.foodrecipes_id
+      foodrecipes_id
     )
-    .then(foodrecipe => {
-      if(!foodrecipe) {
+    .then(foodrecipes => {
+      if(!foodrecipes) {
         return res.status(404).json({
           error: {
             message: `Food Recipes doesn't exist`
           }
         })
       }
-      res.json(foodrecipesForm(foodrecipe))
+      res.json(foodrecipeForm(foodrecipes))
     })
     .catch(next)
   })
   .get((req, res, next) => {
-    res.json(foodrecipesForm(res.foodrecipe))
+    res.json(foodrecipeForm(res.foodrecipes))
   })
   .delete((req, res) => {
+    const {foodrecipes_id} = req.params;
+    
     FoodrecipesService.deleteRecipes(
       req.app.get('db'),
-      req.params.foodrecipes_id
+      foodrecipes_id
     )
-    .then(recipes => {
+    .then(foodrecipes => {
       res.status(204).end()
     })
     .catch(next)
   })
-  //.patch
+  .patch(jsonParser, (req, res, nex) => {
+    const {foodrecipes_id} = req.params;
+    const {foodname, ingredients, description} = req.body;
+    const foodrecipeToUpdate = {foodname, ingredients, description};
+    const requiredFields = {foodname, ingredients, description};
+
+    const numberOfValues = Object.values(foodrecipeToUpdate).filter(Boolean).length;
+    if(numberOfValues === 0) {
+      return res.status(400).json({
+        error: {
+          message: `Request body must contain either foodname, ingredients, or description`
+        }
+      })
+    }
+
+    FoodrecipesService.updateRecipes(
+      res.app.get('db'),
+      foodrecipes_id,
+      foodrecipeToUpdate
+    )
+    .then(numRowAffected => {
+      res.status(204).end()
+    })
+    .catch(next)
+
+  });
+
+
+module.exports = foodrecipesRouter;
+
+
 
 
