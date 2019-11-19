@@ -12,7 +12,7 @@ const foodrecipeForm = foodrecipes => ({
 });
 
 foodrecipesRouter
-  .route('/api/foodrecipes')
+  .route('/')
   .get((req,res,next) => {
     const knexInstance = req.app.get('db');
 
@@ -24,36 +24,36 @@ foodrecipesRouter
   })
   .post(jsonParser, (req, res, next) => {
     const {foodname, ingredients, description} = req.body;
+    const newRecipe = { foodname, ingredients, description };
 
     if(!foodname) {
-      return res.status(400).json({
-        error: {
-          message: `Missing food name`
-        }
-      })
+      return res
+        .status(400)
+        .json({
+          error: {
+            message: `Missing food name`
+          }
+        })
     };
 
     if(!ingredients) {
-      return res.status(400).json({
-        error: {
-          message: `Missing food ingredients`
-        }
-      })
+      return res
+        .status(400)
+        .json({
+          error: {
+            message: `Missing food ingredients`
+          }
+        })
     };
 
     if(!description) {
-      return res.status(400).json({
-        error: {
-          message: `Missing food description`
-        }
-      })
-    };
-
-    const newRecipe = {
-      id,
-      foodname,
-      ingredients,
-      description
+      return res
+        .status(400)
+        .json({
+          error: {
+            message: `Missing food description`
+          }
+        })
     };
 
     FoodrecipesService.insertRecipes(

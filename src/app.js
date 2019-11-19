@@ -17,7 +17,7 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 
-app.use('/', foodrecipesRouter);
+app.use('/api/foodrecipes', foodrecipesRouter);
 
 app.get('/', (req, res) => {
   res.send('Hello, boilerplate!')
