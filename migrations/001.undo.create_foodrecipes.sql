@@ -1,2 +1,2 @@
-DROP TABLE IF EXISTS foodrecipes;
+DROP TABLE IF EXISTS recipes;
 

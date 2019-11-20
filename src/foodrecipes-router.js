@@ -4,11 +4,11 @@ const foodrecipesRouter = express.Router();
 const jsonParser = express.json();
 const path = require('path');
 
-const foodrecipeForm = foodrecipes => ({
-  id: foodrecipes.id,
-  foodname: foodrecipes.foodname,
-  ingredients: foodrecipes.ingredients,
-  description: foodrecipes.description
+const foodrecipeForm = recipes => ({
+  id: recipes.id,
+  foodname: recipes.foodname,
+  ingredients: recipes.ingredients,
+  description: recipes.description
 });
 
 foodrecipesRouter
@@ -17,8 +17,8 @@ foodrecipesRouter
     const knexInstance = req.app.get('db');
 
     FoodrecipesService.getAllRecipes(knexInstance)
-      .then(foodrecipes => {
-        res.json(foodrecipes.map(foodrecipeForm))
+      .then(recipes => {
+        res.json(recipes.map(foodrecipeForm))
       })
       .catch(next)
   })
@@ -60,53 +60,53 @@ foodrecipesRouter
       req.app.get('db'),
       newRecipe
     )
-      .then(foodrecipes => {
+      .then(recipes => {
         res
           .status(201)
-          .location(path.possix.join(req.originalUrl + `/${foodrecipe.id}`))
-          .json(foodrecipeForm(foodrecipes))
+          .location(path.possix.join(req.originalUrl + `/${recipe.id}`))
+          .json(foodrecipeForm(recipes))
       })
       .catch(next)
   });
 
 foodrecipesRouter
-  .route('/:foodrecipes_id')
+  .route('/:recipes_id')
   .all((req, res, next) => {
-    const {foodrecipes_id} = req.params;
+    const {recipes_id} = req.params;
 
     FoodrecipesService.getById(
       req.app.get('db'),
-      foodrecipes_id
+      recipes_id
     )
-    .then(foodrecipes => {
-      if(!foodrecipes) {
+    .then(recipes => {
+      if(!recipes) {
         return res.status(404).json({
           error: {
             message: `Food Recipes doesn't exist`
           }
         })
       }
-      res.json(foodrecipeForm(foodrecipes))
+      res.json(foodrecipeForm(recipes))
     })
     .catch(next)
   })
   .get((req, res, next) => {
-    res.json(foodrecipeForm(res.foodrecipes))
+    res.json(foodrecipeForm(res.recipes))
   })
   .delete((req, res) => {
-    const {foodrecipes_id} = req.params;
+    const {recipes_id} = req.params;
     
     FoodrecipesService.deleteRecipes(
       req.app.get('db'),
-      foodrecipes_id
+      recipes_id
     )
-    .then(foodrecipes => {
+    .then(recipes => {
       res.status(204).end()
     })
     .catch(next)
   })
   .patch(jsonParser, (req, res, nex) => {
-    const {foodrecipes_id} = req.params;
+    const {ecipes_id} = req.params;
     const {foodname, ingredients, description} = req.body;
     const foodrecipeToUpdate = {foodname, ingredients, description};
     const requiredFields = {foodname, ingredients, description};
@@ -122,7 +122,7 @@ foodrecipesRouter
 
     FoodrecipesService.updateRecipes(
       res.app.get('db'),
-      foodrecipes_id,
+      recipes_id,
       foodrecipeToUpdate
     )
     .then(numRowAffected => {

@@ -14,15 +14,15 @@ describe('Food Recipes Endpoints', function() {
   });
 
   after('disconnect from db', () => db.destroy());
-  before('clean the table', () => db.raw('TRUNCATE foodrecipes RESTART IDENTITY CASCADE'));
-  afterEach('cleanup',() => db.raw('TRUNCATE foodrecipes RESTART IDENTITY CASCADE'));
+  before('clean the table', () => db.raw('TRUNCATE recipes RESTART IDENTITY CASCADE'));
+  afterEach('cleanup',() => db.raw('TRUNCATE recipes RESTART IDENTITY CASCADE'));
 
   //GET PASS
-  describe(`GET /api/foodrecipes`, () => {
+  describe(`GET /api/recipes`, () => {
     context(`Given no recipes`, () => {
       it(`Responds with 200 and empty list`, () => {
         return supertest(app)
-          .get('/api/foodrecipes')
+          .get('/api/recipes')
           .expect(200, [])
       })
     });
@@ -32,26 +32,26 @@ describe('Food Recipes Endpoints', function() {
 
       beforeEach(`Insert Food Recipes`, () => {
         return db
-          .into('foodrecipes')
+          .into('recipes')
           .insert(testRecipes)
       })
 
       it('Responds with 200 and get all store', () => {
         return supertest(app)
-          .get('/api/foodrecipes')
+          .get('/api/recipes')
           .expect(200, testRecipes)
       })
     });
 
   });
 
-  describe(`GET /api/foodrecipes/:id`, () => {
+  describe(`GET /api/recipes/:id`, () => {
     context(`Given no food recipes`, () => {
       it(`Responds with 404`, () => {
         const RecipesId = 123456;
 
         return supertest(app)
-          .get(`/api/foodrecipes/${RecipesId}`)
+          .get(`/api/recipes/${RecipesId}`)
           .expect(404, {
             error: {
               message: `Food Recipes doesn't exist`
@@ -65,7 +65,7 @@ describe('Food Recipes Endpoints', function() {
 
       beforeEach(`Insert Food Recipes`, () => {
         return db
-          .into('foodrecipes')
+          .into('recipes')
           .insert(testRecipes)
       })
 
@@ -74,7 +74,7 @@ describe('Food Recipes Endpoints', function() {
         const expectedRecipes = testRecipes[RecipesId - 1];
 
         return supertest(app)
-          .get(`/api/foodrecipes/${RecipesId}`)
+          .get(`/api/recipes/${RecipesId}`)
           .expect(200, expectedRecipes)
       })
     })
@@ -82,7 +82,7 @@ describe('Food Recipes Endpoints', function() {
   });
 
   //POST NEED
-  describe(`POST /api/foodrecipes`, () => {
+  describe(`POST /api/recipes`, () => {
     it(`Creates recipes with 201 responds and add new recipe`, function() {
       const newRecipe = {
         foodname: 'Test food name',
@@ -91,7 +91,7 @@ describe('Food Recipes Endpoints', function() {
       };
 
       return supertest(app)
-        .post('/api/foodrecipes')
+        .post('/api/recipes')
         .send(newRecipe)
         .expect(201)
         .expect(res => {
@@ -102,7 +102,7 @@ describe('Food Recipes Endpoints', function() {
         })
         .then(res => 
           supertest(app)
-            .get(`/api/foodrecipes/${res.body.id}`)
+            .get(`/api/recipes/${res.body.id}`)
             .expect(res.body)
         )
     });

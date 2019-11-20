@@ -1,5 +1,5 @@
 TRUNCATE
-  foodrecipes
+  recipes
   RESTART IDENTITY CASCADE;
 
 
