@@ -25,13 +25,13 @@ const FoodrecipesService = {
 
   deleteRecipes(knex, id) {
     return knex('recipes')
-      .where({ id })
+      .where('id', id)
       .delete()
   },
 
   updateRecipes(knex, id, newRecipesFields) {
     return knex('recipes')
-      .where({ id })
+      .where('id', id)
       .update(newRecipesFields)
   }
 };

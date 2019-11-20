@@ -31,7 +31,7 @@ foodrecipesRouter
         .status(400)
         .json({
           error: {
-            message: `Missing food name`
+            message: `Missing foodname`
           }
         })
     };
@@ -41,7 +41,7 @@ foodrecipesRouter
         .status(400)
         .json({
           error: {
-            message: `Missing food ingredients`
+            message: `Missing ingredients`
           }
         })
     };
@@ -51,7 +51,7 @@ foodrecipesRouter
         .status(400)
         .json({
           error: {
-            message: `Missing food description`
+            message: `Missing description`
           }
         })
     };
@@ -63,20 +63,20 @@ foodrecipesRouter
       .then(recipes => {
         res
           .status(201)
-          .location(path.possix.join(req.originalUrl + `/${recipe.id}`))
+          .location(path.posix.join(req.originalUrl + `/${recipes.id}`))
           .json(foodrecipeForm(recipes))
       })
       .catch(next)
   });
 
 foodrecipesRouter
-  .route('/:recipes_id')
+  .route('/:id')
   .all((req, res, next) => {
-    const {recipes_id} = req.params;
+    const {id} = req.params;
 
     FoodrecipesService.getById(
       req.app.get('db'),
-      recipes_id
+      id
     )
     .then(recipes => {
       if(!recipes) {

@@ -85,9 +85,9 @@ describe('Food Recipes Endpoints', function() {
   describe(`POST /api/recipes`, () => {
     it(`Creates recipes with 201 responds and add new recipe`, function() {
       const newRecipe = {
-        foodname: 'Test food name',
-        ingredients: 'Test food ingredients',
-        description: 'Test food description'
+        foodname: 'food name',
+        ingredients: 'food ingredients',
+        description: 'food description'
       };
 
       return supertest(app)
@@ -99,6 +99,7 @@ describe('Food Recipes Endpoints', function() {
           expect(res.body.foodname).to.eql(newRecipe.foodname)
           expect(res.body.ingredients).to.eql(newRecipe.ingredients)
           expect(res.body.description).to.eql(newRecipe.description)
+          expect(res.headers.location).to.eql(`/api/recipes/${res.body.id}`)
         })
         .then(res => 
           supertest(app)
@@ -116,11 +117,21 @@ describe('Food Recipes Endpoints', function() {
         description: 'Test food description'
       }
 
-      
-
+      it(`response wiht 400 and an error message when somthing missing`, () => {
+        delete newRecipe[field]
+        
+        return supertest(app)
+        .post('/api/recipes')
+        .send(newRecipe)
+        .expect(400, {
+          error: { message: `Missing ${field}` }
+        })
+      })
     })
-  })
 
+  });
+  
+  
 
 
 
