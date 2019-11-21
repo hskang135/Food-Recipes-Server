@@ -24,17 +24,22 @@ const FoodrecipesService = {
   },
 
   deleteRecipes(knex, id) {
-    return knex('recipes')
-      .where('id', id)
+    return knex
+      .from('recipes')
+      .where({ id })
       .delete()
   },
 
   updateRecipes(knex, id, newRecipesFields) {
-    return knex('recipes')
-      .where('id', id)
+    return knex
+      .from('recipes')
+      .where({ id })
       .update(newRecipesFields)
   }
 };
 
 module.exports = FoodrecipesService;
+
+
+
 

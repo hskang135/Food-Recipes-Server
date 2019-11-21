@@ -72,7 +72,7 @@ foodrecipesRouter
 foodrecipesRouter
   .route('/:id')
   .all((req, res, next) => {
-    const {id} = req.params;
+    const { id } = req.params;
 
     FoodrecipesService.getById(
       req.app.get('db'),
@@ -86,47 +86,51 @@ foodrecipesRouter
           }
         })
       }
-      res.json(foodrecipeForm(recipes))
+      res.recipes = recipes
+      next()
     })
     .catch(next)
   })
   .get((req, res, next) => {
+    console.log(res.recipes)
     res.json(foodrecipeForm(res.recipes))
   })
-  .delete((req, res) => {
-    const {recipes_id} = req.params;
-    
+  .delete((req, res, next) => {
+    const { id } = req.params;
+    const knexInstance = req.app.get('db');
+
     FoodrecipesService.deleteRecipes(
-      req.app.get('db'),
-      recipes_id
+      knexInstance,
+      id
     )
     .then(recipes => {
       res.status(204).end()
     })
     .catch(next)
   })
-  .patch(jsonParser, (req, res, nex) => {
-    const {ecipes_id} = req.params;
-    const {foodname, ingredients, description} = req.body;
-    const foodrecipeToUpdate = {foodname, ingredients, description};
-    const requiredFields = {foodname, ingredients, description};
-
+  .patch(jsonParser, (req, res, next) => {
+    const { foodname, ingredients, description } = req.body;
+    const foodrecipeToUpdate = { foodname, ingredients, description };
+    
     const numberOfValues = Object.values(foodrecipeToUpdate).filter(Boolean).length;
-    if(numberOfValues === 0) {
+    if(numberOfValues === 0) 
       return res.status(400).json({
         error: {
-          message: `Request body must contain either foodname, ingredients, or description`
+          message: `Request body must contain informations`
         }
       })
-    }
-
+    
+    console.log(req.params)
+    const { id } = req.params;
+    const knexInstance = req.app.get('db');
+    
     FoodrecipesService.updateRecipes(
-      res.app.get('db'),
-      recipes_id,
+      knexInstance,
+      id,
       foodrecipeToUpdate
     )
-    .then(numRowAffected => {
-      res.status(204).end()
+    .then(() => {
+      res.status(204).json()
     })
     .catch(next)
 

@@ -45,6 +45,7 @@ describe('Food Recipes Endpoints', function() {
 
   });
 
+  //GET ID PASS
   describe(`GET /api/recipes/:id`, () => {
     context(`Given no food recipes`, () => {
       it(`Responds with 404`, () => {
@@ -81,7 +82,7 @@ describe('Food Recipes Endpoints', function() {
 
   });
 
-  //POST NEED
+  //POST PASS
   describe(`POST /api/recipes`, () => {
     it(`Creates recipes with 201 responds and add new recipe`, function() {
       const newRecipe = {
@@ -130,9 +131,96 @@ describe('Food Recipes Endpoints', function() {
     })
 
   });
-  
-  
 
+  //DELETE PASS
+  describe(`DELETE /api/recipes/:id`, () => {
+    context(`Given no recipes in the database`, () => {
+      it(`responds with 404`, () => {
+        const RecipesId = 123456;
+        return supertest(app)
+          .delete(`/api/recipes/${RecipesId}`)
+          .expect(404, {
+            error: { message: `Food Recipes doesn't exist`}
+          })
+      })
+    });
+
+    context('Given there are recipes in the database', () => {
+      const testRecipes= makeRecipesArray();
+
+      beforeEach('insert recipes', () => {
+        return db
+          .into('recipes')
+          .insert(testRecipes)
+      })
+
+      it('get recipes from store with 204', () => {
+        const idToRemove = 5;
+        const expectedRecipes = testRecipes.filter(recipe => recipe.id !== idToRemove)
+        
+        return supertest(app)
+          .delete(`/api/recipes/${idToRemove}`)
+          .expect(204)
+          .then(res =>
+            supertest(app)
+              .get(`/api/recipes`)
+              .expect(expectedRecipes)
+          )
+      })
+    });
+
+  });
+
+  //PATCH NEED
+  describe(`PATCH /api/recipes/:id`, () => {
+    context(`Given no recipes in the database`, () => {
+      it(`responds with 404`, () => {
+        const RecipesId = 123456;
+        return supertest(app)
+          .delete(`/api/recipes/${RecipesId}`)
+          .expect(404, {
+            error: { message: `Food Recipes doesn't exist`}
+          })
+      })
+    });
+
+    context('Given there are articles in the database', () => {
+      const testRecipes = makeRecipesArray();
+      
+      beforeEach('insert recipes', () => {
+        return db
+          .into('recipes')
+          .insert(testRecipes)
+      })
+
+      it.only('Responds wtih 204 and update recipe', () => {
+        const idToUpdate = 4;
+        const testRecipes = makeRecipesArray();
+        const updateRecipe = {
+          foodname: 'Update food name',
+          ingredients: 'Update food ingredients',
+          description: 'Update food description'
+        };
+        const expectedRecipes = {
+          ...testRecipes[idToUpdate - 1],
+          ...updateRecipe
+        };
+
+        return supertest(app)
+          .patch(`/api/recipes/${idToUpdate}`)
+          .send(updateRecipe)
+          .expect(204)
+          .then(res => 
+            supertest(app)
+              .get(`/api/recipes/${idToUpdate}`)
+              .expect(expectedRecipes)
+          )
+      });
+    });
+
+
+
+  });
 
 
 
