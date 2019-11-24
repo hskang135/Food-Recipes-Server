@@ -32,6 +32,3 @@ module.exports = {makeRecipesArray};
 
 
 
-
-
-

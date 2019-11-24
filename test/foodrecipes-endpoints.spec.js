@@ -171,7 +171,7 @@ describe('Food Recipes Endpoints', function() {
 
   });
 
-  //PATCH NEED
+  //PATCH PASS
   describe(`PATCH /api/recipes/:id`, () => {
     context(`Given no recipes in the database`, () => {
       it(`responds with 404`, () => {
@@ -193,7 +193,7 @@ describe('Food Recipes Endpoints', function() {
           .insert(testRecipes)
       })
 
-      it.only('Responds wtih 204 and update recipe', () => {
+      it('Responds wtih 204 and update recipe', () => {
         const idToUpdate = 4;
         const testRecipes = makeRecipesArray();
         const updateRecipe = {
@@ -217,12 +217,13 @@ describe('Food Recipes Endpoints', function() {
           )
       });
     });
-
-
-
   });
 
 
-
-
 });
+
+
+
+
+
+
