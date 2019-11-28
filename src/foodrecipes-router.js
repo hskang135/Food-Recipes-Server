@@ -69,7 +69,6 @@ foodrecipesRouter
       .catch(next)
   });
 
-
 foodrecipesRouter
   .route('/:id')
   .all((req, res, next) => {
@@ -137,9 +136,6 @@ foodrecipesRouter
 
   });
 
-
 module.exports = foodrecipesRouter;
-
-
 
 

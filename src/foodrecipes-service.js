@@ -41,5 +41,3 @@ const FoodrecipesService = {
 module.exports = FoodrecipesService;
 
 
-
-

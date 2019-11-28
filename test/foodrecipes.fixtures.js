@@ -27,8 +27,6 @@ function makeRecipesArray() {
   ]
 };
 
-
 module.exports = {makeRecipesArray};
-
 
 

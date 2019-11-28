@@ -17,7 +17,6 @@ describe('Food Recipes Endpoints', function() {
   before('clean the table', () => db.raw('TRUNCATE recipes RESTART IDENTITY CASCADE'));
   afterEach('cleanup',() => db.raw('TRUNCATE recipes RESTART IDENTITY CASCADE'));
 
-  //GET PASS
   describe(`GET /api/recipes`, () => {
     context(`Given no recipes`, () => {
       it(`Responds with 200 and empty list`, () => {
@@ -45,7 +44,6 @@ describe('Food Recipes Endpoints', function() {
 
   });
 
-  //GET ID PASS
   describe(`GET /api/recipes/:id`, () => {
     context(`Given no food recipes`, () => {
       it(`Responds with 404`, () => {
@@ -82,7 +80,6 @@ describe('Food Recipes Endpoints', function() {
 
   });
 
-  //POST PASS
   describe(`POST /api/recipes`, () => {
     it(`Creates recipes with 201 responds and add new recipe`, function() {
       const newRecipe = {
@@ -132,7 +129,6 @@ describe('Food Recipes Endpoints', function() {
 
   });
 
-  //DELETE PASS
   describe(`DELETE /api/recipes/:id`, () => {
     context(`Given no recipes in the database`, () => {
       it(`responds with 404`, () => {
@@ -171,7 +167,6 @@ describe('Food Recipes Endpoints', function() {
 
   });
 
-  //PATCH PASS
   describe(`PATCH /api/recipes/:id`, () => {
     context(`Given no recipes in the database`, () => {
       it(`responds with 404`, () => {
@@ -219,11 +214,6 @@ describe('Food Recipes Endpoints', function() {
     });
   });
 
-
 });
-
-
-
-
 
 

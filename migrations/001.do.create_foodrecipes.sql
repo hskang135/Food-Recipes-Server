@@ -6,7 +6,3 @@ CREATE TABLE recipes (
 );
 
 
-
-
-
-
