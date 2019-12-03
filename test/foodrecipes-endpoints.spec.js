@@ -17,6 +17,7 @@ describe('Food Recipes Endpoints', function() {
   before('clean the table', () => db.raw('TRUNCATE recipes RESTART IDENTITY CASCADE'));
   afterEach('cleanup',() => db.raw('TRUNCATE recipes RESTART IDENTITY CASCADE'));
 
+  // get recipes
   describe(`GET /api/recipes`, () => {
     context(`Given no recipes`, () => {
       it(`Responds with 200 and empty list`, () => {
@@ -44,6 +45,7 @@ describe('Food Recipes Endpoints', function() {
 
   });
 
+  // get api recipes with id
   describe(`GET /api/recipes/:id`, () => {
     context(`Given no food recipes`, () => {
       it(`Responds with 404`, () => {
@@ -59,6 +61,7 @@ describe('Food Recipes Endpoints', function() {
       })
     });
 
+    // give recipes data into database
     context(`Given recipes in database`, () => {
       const testRecipes = makeRecipesArray();
 
@@ -80,6 +83,7 @@ describe('Food Recipes Endpoints', function() {
 
   });
 
+  // post recipes
   describe(`POST /api/recipes`, () => {
     it(`Creates recipes with 201 responds and add new recipe`, function() {
       const newRecipe = {
@@ -129,6 +133,7 @@ describe('Food Recipes Endpoints', function() {
 
   });
 
+  //delete api recipes with id
   describe(`DELETE /api/recipes/:id`, () => {
     context(`Given no recipes in the database`, () => {
       it(`responds with 404`, () => {
@@ -141,6 +146,7 @@ describe('Food Recipes Endpoints', function() {
       })
     });
 
+    // insert recipes able to delete
     context('Given there are recipes in the database', () => {
       const testRecipes= makeRecipesArray();
 
@@ -167,6 +173,7 @@ describe('Food Recipes Endpoints', function() {
 
   });
 
+  // patch 
   describe(`PATCH /api/recipes/:id`, () => {
     context(`Given no recipes in the database`, () => {
       it(`responds with 404`, () => {
@@ -179,6 +186,7 @@ describe('Food Recipes Endpoints', function() {
       })
     });
 
+    // insert recipes able to patch
     context('Given there are articles in the database', () => {
       const testRecipes = makeRecipesArray();
       
